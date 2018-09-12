@@ -1,10 +1,12 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"time"
 
 	"github.com/BurntSushi/toml"
+	"github.com/siddontang/go-log/log"
 )
 
 type tomlConfig struct {
@@ -39,9 +41,12 @@ type clients struct {
 	Hosts []string
 }
 
+var logLevel = flag.String("log_level", "info", "log level")
+
 func main() {
+	flag.Parse()
 	var config tomlConfig
-	if _, err := toml.DecodeFile("conf/example.toml", &config); err != nil {
+	if _, err := toml.DecodeFile("../conf/example.toml", &config); err != nil {
 		fmt.Println(err)
 		return
 	}
@@ -58,4 +63,9 @@ func main() {
 	}
 	fmt.Printf("Client data: %v\n", config.Clients.Data)
 	fmt.Printf("Client hosts: %v\n", config.Clients.Hosts)
+
+	fmt.Printf("log level:%s\n", *logLevel)
+	log.SetLevelByName(*logLevel)
+	log.Info("info")
+	log.Error("error")
 }
